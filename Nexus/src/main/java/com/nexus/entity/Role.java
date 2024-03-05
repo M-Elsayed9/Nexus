@@ -1,6 +1,13 @@
 package com.nexus.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "role")
@@ -39,14 +46,14 @@ public class Role {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Role)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return id.equals(role.id) && name.equals(role.name);
+        return Objects.equals(getName(), role.getName());
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(getName());
     }
 
     @Override
