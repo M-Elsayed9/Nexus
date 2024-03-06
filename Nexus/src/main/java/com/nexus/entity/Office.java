@@ -1,7 +1,6 @@
 package com.nexus.entity;
 
 import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -69,13 +68,14 @@ public class Office {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Office office = (Office) o;
-        return availability == office.availability && Objects.equals(id, office.id) && Objects.equals(name, office.name) && Objects.equals(landlord, office.landlord);
+        return Objects.equals(name, office.name) && Objects.equals(landlord, office.landlord);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, landlord, availability);
+        return Objects.hash(name, landlord);
     }
+
 
     @Override
     public String toString() {
