@@ -1,19 +1,10 @@
 package com.nexus.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
 
 @Entity
 @Table(name = "user")
@@ -38,13 +29,15 @@ public class User {
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Office> offices = new HashSet<>();
+
+//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<Booking> bookings = new HashSet<>();
 
     public User() {
     }
@@ -105,21 +98,38 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public void addRole(Role role) {
-        roles.add(role);
+    public Set<Office> getOffices() {
+        return offices;
     }
 
-    public void removeRole(Role role) {
-        roles.remove(role);
+    public void setOffices(Set<Office> offices) {
+        this.offices = offices;
     }
+
+    public boolean isAdmin() {
+        return this.role.getName().equals("ADMIN");
+    }
+
+    public boolean isGuest() {
+        return this.role.getName().equals("GUEST");
+    }
+
+    public boolean isUser() {
+        return this.role.getName().equals("USER");
+    }
+
+    public boolean isLandlord() {
+        return this.role.getName().equals("LANDLORD");
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -142,8 +152,12 @@ public class User {
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", email='").append(email).append('\'');
-        sb.append(", roles=").append(roles);
+        sb.append(", role=").append(role);
         sb.append('}');
         return sb.toString();
+    }
+
+    public void addRole(Role role) {
+        this.role = role;
     }
 }
