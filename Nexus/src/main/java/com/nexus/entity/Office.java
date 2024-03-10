@@ -1,26 +1,39 @@
 package com.nexus.entity;
 
-import jakarta.persistence.*;
-import java.util.HashSet;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
 import java.util.Objects;
-import java.util.Set;
+
 @Entity
 @Table(name = "office")
 public class Office {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "landlord_id")
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "landlord_id", nullable = false)
     private User landlord;
 
     @Column(name = "availability", nullable = false)
     private boolean availability;
+
+    @OneToOne(mappedBy = "office", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private OfficeDetails officeDetails;
 
     public Office() {
     }
@@ -31,11 +44,11 @@ public class Office {
         this.availability = availability;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,19 +76,26 @@ public class Office {
         this.availability = availability;
     }
 
+    public OfficeDetails getOfficeDetails() {
+        return officeDetails;
+    }
+
+    public void setOfficeDetails(OfficeDetails officeDetails) {
+        this.officeDetails = officeDetails;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Office office = (Office) o;
-        return Objects.equals(name, office.name) && Objects.equals(landlord, office.landlord);
+        return Objects.equals(getName(), office.getName()) && Objects.equals(getLandlord(), office.getLandlord());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, landlord);
+        return Objects.hash(getName(), getLandlord());
     }
-
 
     @Override
     public String toString() {
