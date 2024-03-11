@@ -12,16 +12,18 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "renter_id", unique = true)
     private User renter;
 
+    @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Office> offices = new HashSet<>();
 
-    public WishList(Long id, User renter, Set<Office> offices) {
-        this.id = id;
+    public WishList() {
+    }
+
+    public WishList(User renter) {
         this.renter = renter;
-        this.offices = offices;
     }
 
     public Long getId() {
