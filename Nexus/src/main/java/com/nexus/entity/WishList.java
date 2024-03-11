@@ -16,7 +16,12 @@ public class WishList {
     @JoinColumn(name = "renter_id", unique = true)
     private User renter;
 
-    @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "wishlist_office", // Name of the join table
+            joinColumns = @JoinColumn(name = "wishlist_id"), // Column for WishList ID
+            inverseJoinColumns = @JoinColumn(name = "office_id") // Column for Office ID
+    )
     private Set<Office> offices = new HashSet<>();
 
     public WishList() {
