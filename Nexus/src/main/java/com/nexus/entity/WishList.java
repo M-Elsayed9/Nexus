@@ -22,6 +22,8 @@ public class WishList {
             joinColumns = @JoinColumn(name = "wishlist_id"), // Column for WishList ID
             inverseJoinColumns = @JoinColumn(name = "office_id") // Column for Office ID
     )
+
+    @Column(name = "offices")
     private Set<Office> offices = new HashSet<>();
 
     public WishList() {
