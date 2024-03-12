@@ -42,6 +42,15 @@ public class Booking {
         this.documentsUrl = documentsUrl;
     }
 
+    public Booking(Long id, LocalDate startDate, LocalDate endDate, User renter, User landLord, Office office) {
+        this.id = id;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.renter = renter;
+        this.landLord = landLord;
+        this.office = office;
+    }
+
     public Long getId() {
         return id;
     }
@@ -103,12 +112,12 @@ public class Booking {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Booking booking = (Booking) o;
-        return Objects.equals(getStartDate(), booking.getStartDate()) && Objects.equals(getEndDate(), booking.getEndDate()) && Objects.equals(getRenter(), booking.getRenter()) && Objects.equals(getLandLord(), booking.getLandLord()) && Objects.equals(getOffice(), booking.getOffice()) && Objects.equals(getDocumentsUrl(), booking.getDocumentsUrl());
+        return Objects.equals(getStartDate(), booking.getStartDate()) && Objects.equals(getEndDate(), booking.getEndDate()) && Objects.equals(getRenter(), booking.getRenter()) && Objects.equals(getLandLord(), booking.getLandLord()) && Objects.equals(getOffice(), booking.getOffice());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStartDate(), getEndDate(), getRenter(), getLandLord(), getOffice(), getDocumentsUrl());
+        return Objects.hash(getStartDate(), getEndDate(), getRenter(), getLandLord(), getOffice());
     }
 
     @Override
