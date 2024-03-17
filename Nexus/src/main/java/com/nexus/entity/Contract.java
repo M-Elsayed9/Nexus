@@ -126,9 +126,9 @@ public class Booking {
                 "id=" + id +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", renter=" + renter +
-                ", landLord=" + landLord +
-                ", office=" + office +
+                ", renterID=" + renter.getId() +
+                ", landLordID=" + landLord.getId() +
+                ", officeID=" + office.getId() +
                 ", documentsUrl='" + documentsUrl + '\'' +
                 '}';
     }
