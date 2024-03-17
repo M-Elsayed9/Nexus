@@ -5,19 +5,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "role")
+@Table(name = "role", indexes = {
+        @Index(name = "idx_role_name", columnList = "name")
+})
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(20)")
     private String name;
 
     public Role() {
@@ -59,7 +62,6 @@ public class Role {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Role{");
-        sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
         sb.append('}');
         return sb.toString();

@@ -1,43 +1,57 @@
 package com.nexus.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", indexes = {
+        @Index(name = "idx_user_name", columnList = "user_name"),
+        @Index(name = "idx_email", columnList = "email")
+})
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name", nullable = false, unique = true, length = 50)
+    @Column(name = "user_name", nullable = false, unique = true, columnDefinition = "VARCHAR(50)", updatable = false)
     private String userName;
 
-    @Column(name = "first_name", nullable = false, length = 50)
+    @Column(name = "first_name", nullable = false, columnDefinition = "VARCHAR(50)")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 50)
+    @Column(name = "last_name", nullable = false, columnDefinition = "VARCHAR(50)")
     private String lastName;
 
-    @Column(name = "email", nullable = false, unique = true, length = 50)
+    @Column(name = "email", nullable = false, unique = true, columnDefinition = "VARCHAR(50)", updatable = false)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 100)
+    @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(100)")
     private String password;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "role_id", nullable = false, updatable = false, columnDefinition = "BIGINT")
+    @JsonManagedReference
     private Role role;
 
-    @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Office> offices = new HashSet<>();
+    @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JsonManagedReference
+    private Set<Office> offices;
 
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<Booking> bookings = new HashSet<>();
+    @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JsonManagedReference
+    private Set<Contract> landlordContracts;
+
+    @OneToMany(mappedBy = "renter", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JsonManagedReference
+    private Set<Contract> renterContracts;
+
+    @OneToOne(mappedBy = "renter", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
+    @JsonManagedReference
+    private WishList wishList;
 
     public User() {
     }
@@ -130,7 +144,6 @@ public class User {
         return this.role.getName().equals("LANDLORD");
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -152,7 +165,7 @@ public class User {
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", email='").append(email).append('\'');
-        sb.append(", role=").append(role);
+        sb.append(", role=").append(role.getName());
         sb.append('}');
         return sb.toString();
     }

@@ -1,48 +1,66 @@
 package com.nexus.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 @Table(name = "booking")
-public class Booking {
+public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable = false, columnDefinition = "DATE")
     private LocalDate startDate;
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
 
-    @ManyToOne()
-    @JoinColumn(name = "renter_id", referencedColumnName = "id")
+    @Column(name = "rental_price", nullable = false, columnDefinition = "DECIMAL(10,2)")
+    private BigDecimal rentalPrice;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "renter_id", columnDefinition = "BIGINT", nullable = false)
+    @JsonBackReference
     private User renter;
 
-    @ManyToOne()
-    @JoinColumn(name = "landlord_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "landlord_id", columnDefinition = "BIGINT", nullable = false)
+    @JsonBackReference
     private User landLord;
 
-    @ManyToOne()
-    @JoinColumn(name = "office_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "office_id", columnDefinition = "BIGINT", nullable = false)
+    @JsonBackReference
     private Office office;
-    @Column(name = "documents_url")
-    private String documentsUrl;
 
-    public Booking() {
+    @Column(name = "documents_url", columnDefinition = "VARCHAR(255)")
+    private String documentUrl;
+
+    public Contract() {
     }
 
-    public Booking(LocalDate startDate, LocalDate endDate, User renter, User landLord, Office office, String documentsUrl) {
+    public Contract(LocalDate startDate, LocalDate endDate, User renter, User landLord, Office office, String documentUrl) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.renter = renter;
         this.landLord = landLord;
         this.office = office;
-        this.documentsUrl = documentsUrl;
+        this.documentUrl = documentUrl;
     }
 
-    public Booking(Long id, LocalDate startDate, LocalDate endDate, User renter, User landLord, Office office) {
+    public Contract(Long id, LocalDate startDate, LocalDate endDate, User renter, User landLord, Office office) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -75,6 +93,14 @@ public class Booking {
         this.endDate = endDate;
     }
 
+    public BigDecimal getRentalPrice() {
+        return rentalPrice;
+    }
+
+    public void setRentalPrice(BigDecimal rentalPrice) {
+        this.rentalPrice = rentalPrice;
+    }
+
     public User getRenter() {
         return renter;
     }
@@ -100,24 +126,29 @@ public class Booking {
     }
 
     public String getDocumentsUrl() {
-        return documentsUrl;
+        return documentUrl;
     }
 
     public void setDocumentsUrl(String documentsUrl) {
-        this.documentsUrl = documentsUrl;
+        this.documentUrl = documentsUrl;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Booking booking = (Booking) o;
-        return Objects.equals(getStartDate(), booking.getStartDate()) && Objects.equals(getEndDate(), booking.getEndDate()) && Objects.equals(getRenter(), booking.getRenter()) && Objects.equals(getLandLord(), booking.getLandLord()) && Objects.equals(getOffice(), booking.getOffice());
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Contract contract = (Contract) o;
+        return Objects.equals(getStartDate(), contract.getStartDate())
+                && Objects.equals(getEndDate(), contract.getEndDate())
+                && Objects.equals(getRenter().getId(), contract.getRenter().getId())
+                && Objects.equals(getLandLord().getId(), contract.getLandLord().getId())
+                && Objects.equals(getOffice().getId(), contract.getOffice().getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStartDate(), getEndDate(), getRenter(), getLandLord(), getOffice());
+        return Objects.hash(getStartDate(), getEndDate(), getRenter().getId(), getLandLord().getId(), getOffice().getId());
     }
 
     @Override
@@ -129,7 +160,6 @@ public class Booking {
                 ", renterID=" + renter.getId() +
                 ", landLordID=" + landLord.getId() +
                 ", officeID=" + office.getId() +
-                ", documentsUrl='" + documentsUrl + '\'' +
                 '}';
     }
 }
