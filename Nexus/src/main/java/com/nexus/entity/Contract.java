@@ -38,7 +38,7 @@ public class Contract {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "landlord_id", columnDefinition = "BIGINT", nullable = false)
     @JsonBackReference
-    private User landLord;
+    private User landlord;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id", columnDefinition = "BIGINT", nullable = false)
@@ -51,21 +51,21 @@ public class Contract {
     public Contract() {
     }
 
-    public Contract(LocalDate startDate, LocalDate endDate, User renter, User landLord, Office office, String documentUrl) {
+    public Contract(LocalDate startDate, LocalDate endDate, User renter, User landlord, Office office, String documentUrl) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.renter = renter;
-        this.landLord = landLord;
+        this.landlord = landlord;
         this.office = office;
         this.documentUrl = documentUrl;
     }
 
-    public Contract(Long id, LocalDate startDate, LocalDate endDate, User renter, User landLord, Office office) {
+    public Contract(Long id, LocalDate startDate, LocalDate endDate, User renter, User landlord, Office office) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.renter = renter;
-        this.landLord = landLord;
+        this.landlord = landlord;
         this.office = office;
     }
 
@@ -109,12 +109,12 @@ public class Contract {
         this.renter = renter;
     }
 
-    public User getLandLord() {
-        return landLord;
+    public User getLandlord() {
+        return landlord;
     }
 
-    public void setLandLord(User landLord) {
-        this.landLord = landLord;
+    public void setLandlord(User landlord) {
+        this.landlord = landlord;
     }
 
     public Office getOffice() {
@@ -142,13 +142,13 @@ public class Contract {
         return Objects.equals(getStartDate(), contract.getStartDate())
                 && Objects.equals(getEndDate(), contract.getEndDate())
                 && Objects.equals(getRenter().getId(), contract.getRenter().getId())
-                && Objects.equals(getLandLord().getId(), contract.getLandLord().getId())
+                && Objects.equals(getLandlord().getId(), contract.getLandlord().getId())
                 && Objects.equals(getOffice().getId(), contract.getOffice().getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStartDate(), getEndDate(), getRenter().getId(), getLandLord().getId(), getOffice().getId());
+        return Objects.hash(getStartDate(), getEndDate(), getRenter().getId(), getLandlord().getId(), getOffice().getId());
     }
 
     @Override
@@ -158,7 +158,7 @@ public class Contract {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", renterID=" + renter.getId() +
-                ", landLordID=" + landLord.getId() +
+                ", landLordID=" + landlord.getId() +
                 ", officeID=" + office.getId() +
                 '}';
     }

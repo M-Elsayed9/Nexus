@@ -39,7 +39,7 @@ public class User {
 
     @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonManagedReference
-    private Set<Office> offices;
+    private Set<Office> LandlordOffices;
 
     @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonManagedReference
@@ -51,7 +51,7 @@ public class User {
 
     @OneToOne(mappedBy = "renter", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
     @JsonManagedReference
-    private WishList wishList;
+    private WishList customerWishList;
 
     public User() {
     }
@@ -120,14 +120,6 @@ public class User {
         this.role = role;
     }
 
-    public Set<Office> getOffices() {
-        return offices;
-    }
-
-    public void setOffices(Set<Office> offices) {
-        this.offices = offices;
-    }
-
     public boolean isAdmin() {
         return this.role.getName().equals("ADMIN");
     }
@@ -142,6 +134,50 @@ public class User {
 
     public boolean isLandlord() {
         return this.role.getName().equals("LANDLORD");
+    }
+
+    public Set<Office> getLandlordOffices() {
+        return LandlordOffices;
+    }
+
+    public void setLandlordOffices(Set<Office> LandlordOffices) {
+        this.LandlordOffices = LandlordOffices;
+    }
+
+    public void addLandlordOffice(Office office) {
+        this.LandlordOffices.add(office);
+    }
+
+    public Set<Contract> getLandlordContracts() {
+        return landlordContracts;
+    }
+
+    public void setLandlordContracts(Set<Contract> landlordContracts) {
+        this.landlordContracts = landlordContracts;
+    }
+
+    public void addLandlordContract(Contract contract) {
+        this.landlordContracts.add(contract);
+    }
+
+    public Set<Contract> getRenterContracts() {
+        return renterContracts;
+    }
+
+    public void setRenterContracts(Set<Contract> renterContracts) {
+        this.renterContracts = renterContracts;
+    }
+
+    public void addRenterContract(Contract contract) {
+        this.renterContracts.add(contract);
+    }
+
+    public WishList getCustomerWishList() {
+        return customerWishList;
+    }
+
+    public void setCustomerWishList(WishList customerWishList) {
+        this.customerWishList = customerWishList;
     }
 
     @Override

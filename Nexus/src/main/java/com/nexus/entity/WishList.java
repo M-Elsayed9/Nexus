@@ -32,8 +32,8 @@ public class WishList {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "wishlist_offices",
-            joinColumns = @JoinColumn(name = "wishlist_id", columnDefinition = "BIGINT", nullable = false, updatable = false),
-            inverseJoinColumns = @JoinColumn(name = "office_id", columnDefinition = "BIGINT", nullable = false, updatable = false)
+            joinColumns = @JoinColumn(name = "wishlist_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "office_id", nullable = false)
     )
     private Set<Office> offices = new HashSet<>();
 
