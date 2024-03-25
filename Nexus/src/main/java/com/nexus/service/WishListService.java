@@ -62,21 +62,6 @@ public class WishListService {
         return toDTO(wishList);
     }
 
-    @Transactional
-    public WishListDTO addWishList(WishListDTO wishListDTO) {
-        User renter = userRepository.findById(wishListDTO.getRenterId())
-                .orElseThrow(() -> new IllegalArgumentException("Renter not found"));
-        WishList wishList = new WishList(renter);
-        wishList.setOffices(wishListDTO.getOffices());
-        WishList savedWishList = wishListRepository.save(wishList);
-        return toDTO(savedWishList);
-    }
-
-    @Transactional
-    public void deleteWishList(Long id) {
-        wishListRepository.deleteById(id);
-    }
-
     private WishListDTO toDTO(WishList wishList) {
         Set<Office> offices = wishList.getOffices();
         return new WishListDTO(wishList.getId(), wishList.getRenter().getId(), offices);
