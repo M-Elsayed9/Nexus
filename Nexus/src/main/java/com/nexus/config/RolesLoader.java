@@ -12,8 +12,7 @@ public class RolesLoader {
     CommandLineRunner initDatabase(RoleRepository roleRepository) {
         return args -> {
             if (roleRepository.count() == 0) {
-                // 'ADMIN', 'USER', 'LANDLORD', 'GUEST
-                roleRepository.save(new Role("GUEST"));
+                // 'ADMIN', 'USER', 'LANDLORD'
                 roleRepository.save(new Role("ADMIN"));
                 roleRepository.save(new Role("USER"));
                 roleRepository.save(new Role("LANDLORD"));
