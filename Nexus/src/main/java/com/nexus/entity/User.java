@@ -1,7 +1,10 @@
 package com.nexus.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 import java.util.Set;
@@ -11,6 +14,12 @@ import java.util.Set;
         @Index(name = "idx_user_name", columnList = "user_name"),
         @Index(name = "idx_email", columnList = "email")
 })
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -34,27 +43,23 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "role_id", nullable = false, updatable = false, columnDefinition = "BIGINT")
-    @JsonManagedReference
     private Role role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JsonManagedReference
     private Set<Office> LandlordOffices;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "landlord", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JsonManagedReference
     private Set<Contract> landlordContracts;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "renter", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JsonManagedReference
     private Set<Contract> renterContracts;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "renter", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
-    @JsonManagedReference
     private WishList customerWishList;
-
-    public User() {
-    }
 
     public User(String userName, String firstName, String lastName, String email, String password) {
         this.userName = userName;
@@ -64,120 +69,16 @@ public class User {
         this.password = password;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public boolean isAdmin() {
-        return this.role.getName().equals("ADMIN");
-    }
-
-    public boolean isGuest() {
-        return this.role.getName().equals("GUEST");
-    }
-
-    public boolean isUser() {
-        return this.role.getName().equals("USER");
-    }
-
-    public boolean isLandlord() {
-        return this.role.getName().equals("LANDLORD");
-    }
-
-    public Set<Office> getLandlordOffices() {
-        return LandlordOffices;
-    }
-
-    public void setLandlordOffices(Set<Office> LandlordOffices) {
-        this.LandlordOffices = LandlordOffices;
-    }
-
     public void addLandlordOffice(Office office) {
         this.LandlordOffices.add(office);
-    }
-
-    public Set<Contract> getLandlordContracts() {
-        return landlordContracts;
-    }
-
-    public void setLandlordContracts(Set<Contract> landlordContracts) {
-        this.landlordContracts = landlordContracts;
     }
 
     public void addLandlordContract(Contract contract) {
         this.landlordContracts.add(contract);
     }
 
-    public Set<Contract> getRenterContracts() {
-        return renterContracts;
-    }
-
-    public void setRenterContracts(Set<Contract> renterContracts) {
-        this.renterContracts = renterContracts;
-    }
-
     public void addRenterContract(Contract contract) {
         this.renterContracts.add(contract);
-    }
-
-    public WishList getCustomerWishList() {
-        return customerWishList;
-    }
-
-    public void setCustomerWishList(WishList customerWishList) {
-        this.customerWishList = customerWishList;
     }
 
     @Override
@@ -204,9 +105,5 @@ public class User {
         sb.append(", role=").append(role.getName());
         sb.append('}');
         return sb.toString();
-    }
-
-    public void addRole(Role role) {
-        this.role = role;
     }
 }

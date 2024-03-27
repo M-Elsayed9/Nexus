@@ -1,6 +1,7 @@
 package com.nexus.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,6 +13,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -19,6 +23,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "wishlist")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+@Getter
+@Setter
+@NoArgsConstructor
 public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +36,6 @@ public class WishList {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "renter_id", unique = true, nullable = false, updatable = false, columnDefinition = "BIGINT")
-    @JsonBackReference
     private User renter;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
@@ -37,35 +46,8 @@ public class WishList {
     )
     private Set<Office> offices = new HashSet<>();
 
-    public WishList() {
-    }
-
     public WishList(User renter) {
         this.renter = renter;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getRenter() {
-        return renter;
-    }
-
-    public void setRenter(User renter) {
-        this.renter = renter;
-    }
-
-    public Set<Office> getOffices() {
-        return offices;
-    }
-
-    public void setOffices(Set<Office> offices) {
-        this.offices = offices;
     }
 
     public void addOffice(Office office) {
@@ -78,10 +60,6 @@ public class WishList {
 
     public void clearOffices() {
         this.offices.clear();
-    }
-
-    public boolean containsOffice(Office office) {
-        return this.offices.contains(office);
     }
 
     @Override
@@ -99,10 +77,9 @@ public class WishList {
 
     @Override
     public String toString() {
-        return "WishList{" +
-                "id=" + id +
-                ", renter=" + renter.getId() +
-                ", offices=" + offices +
-                '}';
+        final StringBuilder sb = new StringBuilder("WishList{");
+        sb.append("offices=").append(offices);
+        sb.append('}');
+        return sb.toString();
     }
 }
