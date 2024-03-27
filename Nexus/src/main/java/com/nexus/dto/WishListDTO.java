@@ -1,17 +1,20 @@
 package com.nexus.dto;
 import com.nexus.entity.Office;
-import java.util.HashSet;
+import com.nexus.entity.WishList;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class WishListDTO {
 
     private Long id;
     private Long renterId;
-    private Set<Office> offices = new HashSet<>();
-
-    public WishListDTO() {
-
-    }
+    private Set<Office> offices;
 
     public WishListDTO(Long id, Long renterId, Set<Office> offices) {
         this.id = id;
@@ -19,36 +22,12 @@ public class WishListDTO {
         this.offices = offices;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getRenterId() {
-        return renterId;
-    }
-
-    public void setRenterId(Long renterId) {
-        this.renterId = renterId;
-    }
-
-    public Set<Office> getOffices() {
-        return offices;
-    }
-
-    public void setOffices(Set<Office> offices) {
-        this.offices = offices;
-    }
-
     @Override
     public String toString() {
-        return "WishListDTO{" +
-                "id=" + id +
-                ", renterId=" + renterId +
-                ", offices=" + offices +
-                '}';
+        final StringBuilder sb = new StringBuilder("WishListDTO{");
+        sb.append("id=").append(id);
+        sb.append(", renterId=").append(renterId);
+        sb.append('}');
+        return sb.toString();
     }
 }
