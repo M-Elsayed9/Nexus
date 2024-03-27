@@ -28,7 +28,7 @@ public class UserService {
     }
 
     @Transactional
-    public void addUser(User user) {
+    public void addCustomer(User user) {
         User newUser = addUserRole(user, "USER");
     }
 

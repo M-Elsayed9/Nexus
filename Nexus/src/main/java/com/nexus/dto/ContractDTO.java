@@ -1,8 +1,15 @@
 package com.nexus.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class ContractDTO {
     private Long id;
     private LocalDate startDate;
@@ -11,96 +18,28 @@ public class ContractDTO {
     private Long renterId;
     private Long landLordId;
     private Long officeId;
-    private String documentUrl;
 
-    public ContractDTO() {
-    }
 
-    public ContractDTO(LocalDate startDate, LocalDate endDate, BigDecimal rentalPrice, Long renterId, Long landLordId, Long officeId, String documentUrl) {
+    public ContractDTO(LocalDate startDate, LocalDate endDate, BigDecimal rentalPrice, Long renterId, Long landLordId, Long officeId) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.rentalPrice = rentalPrice;
         this.renterId = renterId;
         this.landLordId = landLordId;
         this.officeId = officeId;
-        this.documentUrl = documentUrl;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public BigDecimal getRentalPrice() {
-        return rentalPrice;
-    }
-
-    public void setRentalPrice(BigDecimal rentalPrice) {
-        this.rentalPrice = rentalPrice;
-    }
-
-    public Long getRenterId() {
-        return renterId;
-    }
-
-    public void setRenterId(Long renterId) {
-        this.renterId = renterId;
-    }
-
-    public Long getLandLordId() {
-        return landLordId;
-    }
-
-    public void setLandLordId(Long landLordId) {
-        this.landLordId = landLordId;
-    }
-
-    public Long getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(Long officeId) {
-        this.officeId = officeId;
-    }
-
-    public String getDocumentUrl() {
-        return documentUrl;
-    }
-
-    public void setDocumentUrl(String documentUrl) {
-        this.documentUrl = documentUrl;
     }
 
     @Override
     public String toString() {
-        return "ContractDTO{" +
-                "id=" + id +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", rentalPrice=" + rentalPrice +
-                ", renterId=" + renterId +
-                ", landLordId=" + landLordId +
-                ", officeId=" + officeId +
-                ", documentUrl='" + documentUrl + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder("ContractDTO{");
+        sb.append("id=").append(id);
+        sb.append(", startDate=").append(startDate);
+        sb.append(", endDate=").append(endDate);
+        sb.append(", rentalPrice=").append(rentalPrice);
+        sb.append(", renterId=").append(renterId);
+        sb.append(", landLordId=").append(landLordId);
+        sb.append(", officeId=").append(officeId);
+        sb.append('}');
+        return sb.toString();
     }
 }

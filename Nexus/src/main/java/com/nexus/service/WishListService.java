@@ -1,7 +1,6 @@
 package com.nexus.service;
 import com.nexus.dto.WishListDTO;
 import com.nexus.entity.Office;
-import com.nexus.entity.User;
 import com.nexus.entity.WishList;
 import com.nexus.repository.OfficeRepository;
 import com.nexus.repository.UserRepository;
@@ -34,10 +33,6 @@ public class WishListService {
         Office office = officeRepository.findById(officeId)
                 .orElseThrow(() -> new IllegalArgumentException("Office not found"));
 
-        if (!office.isAvailability()) {
-            throw new IllegalStateException("Office is not available");
-        }
-
         wishList.addOffice(office);
         WishList updatedWishList = wishListRepository.save(wishList);
         return toDTO(updatedWishList);
@@ -63,7 +58,7 @@ public class WishListService {
     }
 
     private WishListDTO toDTO(WishList wishList) {
-        Set<Office> offices = wishList.getOffices();
+        Set<Office> offices = Set.copyOf(wishList.getOffices());
         return new WishListDTO(wishList.getId(), wishList.getRenter().getId(), offices);
     }
 }

@@ -1,7 +1,6 @@
 package com.nexus.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +14,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -26,6 +28,12 @@ import java.util.Set;
         @Index(name = "idx_office_name", columnList = "name"),
         @Index(name = "idx_availability", columnList = "availability")
 })
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Office {
 
     @Id
@@ -37,22 +45,17 @@ public class Office {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "landlord_id", nullable = false, columnDefinition = "BIGINT")
-    @JsonBackReference
     private User landlord;
 
     @Column(name = "availability", nullable = false, columnDefinition = "BOOLEAN")
     private boolean availability;
 
     @OneToOne(mappedBy = "office", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
-    @JsonManagedReference
     private OfficeDetails officeDetails;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "office", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JsonManagedReference
     private Set<Contract> contracts = new HashSet<>();
-
-    public Office() {
-    }
 
     public Office(String name, User landlord, boolean availability) {
         this.name = name;
@@ -60,73 +63,13 @@ public class Office {
         this.availability = availability;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public User getLandlord() {
-        return landlord;
-    }
-
-    public void setLandlord(User landlord) {
-        this.landlord = landlord;
-    }
-
     public boolean isAvailability() {
         return availability;
-    }
-
-    public void setAvailability(boolean availability) {
-        this.availability = availability;
-    }
-
-    public OfficeDetails getOfficeDetails() {
-        return officeDetails;
-    }
-
-    public void setOfficeDetails(OfficeDetails officeDetails) {
-        this.officeDetails = officeDetails;
-    }
-
-    public Set<Contract> getContracts() {
-        return contracts;
-    }
-
-    public void setContracts(Set<Contract> contracts) {
-        this.contracts = contracts;
     }
 
     public void addContract(Contract contract) {
         contracts.add(contract);
         contract.setOffice(this);
-    }
-
-    public BigDecimal getRentalPrice() {
-        return officeDetails.getRentalPrice();
-    }
-
-    public String getDescription() {
-        return officeDetails.getDescription();
-    }
-
-    public Integer getCapacity() {
-        return officeDetails.getCapacity();
-    }
-
-    public String getMediaUrls() {
-        return officeDetails.getMediaUrls();
     }
 
     @Override
@@ -145,12 +88,14 @@ public class Office {
 
     @Override
     public String toString() {
-        return "Office{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", landlordID=" + landlord.getId() +
-                ", availability=" + availability +
-                '}';
+        final StringBuilder sb = new StringBuilder("Office{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", landlord=").append(landlord.getId());
+        sb.append(", availability=").append(availability);
+        sb.append(", officeDetails=").append(officeDetails);
+        sb.append('}');
+        return sb.toString();
     }
 }
 
