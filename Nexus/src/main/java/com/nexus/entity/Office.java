@@ -47,6 +47,7 @@ public class Office {
     @JoinColumn(name = "landlord_id", nullable = false, columnDefinition = "BIGINT")
     private User landlord;
 
+    @Getter
     @Column(name = "availability", nullable = false, columnDefinition = "BOOLEAN")
     private boolean availability;
 
@@ -61,10 +62,6 @@ public class Office {
         this.name = name;
         this.landlord = landlord;
         this.availability = availability;
-    }
-
-    public boolean isAvailability() {
-        return availability;
     }
 
     public void addContract(Contract contract) {
