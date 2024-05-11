@@ -1,0 +1,14 @@
+# Node modules
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+
+# System files
+.DS_Store
+
+# IDE settings
+.idea/
+.vscode/
