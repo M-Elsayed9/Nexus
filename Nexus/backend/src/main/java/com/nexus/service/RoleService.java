@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Service
 public class RoleService {
 
@@ -48,5 +47,4 @@ public class RoleService {
     public void deleteRole(Long id) {
         roleRepository.deleteById(id);
     }
-
 }
